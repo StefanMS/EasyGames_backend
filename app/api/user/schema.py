@@ -34,3 +34,8 @@ class UserInDBBase(UserBase):
 
 class UserResponse(UserInDBBase):
     pass
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str
