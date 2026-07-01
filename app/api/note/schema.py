@@ -25,3 +25,7 @@ class NoteInDBBase(NoteBase):
 
     class Config:
         orm_mode = True
+
+
+class NoteResponse(NoteInDBBase):
+    pass

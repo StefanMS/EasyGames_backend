@@ -1,15 +1,20 @@
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import text
 from sqlalchemy.future import select
-from app.db.base import Base
-from models import Collection
-from schema import CollectionCreate
+from app.api.collection.models import Collection
+from app.api.bidding_basket.models import BiddingBasket
+from app.api.collection.schema import CollectionCreate
 from typing import Optional
 from datetime import datetime
 
 
-async def get_collection_by_user_id(db: AsyncSession, 
-                                    user_id: int) -> Collection:
-    result = await db.execute(select(Base).filter(Base.user_id == user_id))
+async def get_collection_by_user_id(db: AsyncSession,
+                                    user_id: int) -> Optional[Collection]:
+    result = await db.execute(
+        select(Collection)
+        .join(BiddingBasket, BiddingBasket.game_id == Collection.game_id)
+        .filter(BiddingBasket.player_id == user_id)
+    )
     return result.scalars().first()
 
 
@@ -38,8 +43,10 @@ async def update_game_status(db: AsyncSession,
 
 
 async def reset_game(db: AsyncSession, game_id: int) -> None:
-    await db.execute("DELETE FROM bidding_basket WHERE \
-                     game_id = :game_id", {"game_id": game_id})
+    await db.execute(
+        text("DELETE FROM bidding_baskets WHERE game_id = :game_id"),
+        {"game_id": game_id}
+    )
     await db.commit()
 
 

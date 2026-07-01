@@ -25,5 +25,4 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     notes = relationship("Note", back_populates="user")
-    collections = relationship("Collection", back_populates="user")
     baskets = relationship("BiddingBasket", back_populates="user")

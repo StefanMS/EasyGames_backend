@@ -1,22 +1,19 @@
 '''
 Config module
 '''
-# pylint: disable=no-name-in-module
-# pylint: disable=no-self-argument
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     '''
     Class for db settings
     '''
-    DATABASE_URL: str
-    SECRET_KEY: str
+    DATABASE_URL: str = "sqlite+aiosqlite:///./easygames_db.db"
+    SECRET_KEY: str = "dev-secret-key"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
-    class Config:
-        env_file = ".env" 
+    model_config = SettingsConfigDict(env_file=".env")
 
 
 settings = Settings()

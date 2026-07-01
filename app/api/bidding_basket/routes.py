@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Dict, Any, Optional
 from sqlalchemy.future import select
-from crud import (
+from app.api.bidding_basket.crud import (
     create_bid,
     get_all_bidding_baskets,
     get_bidding_basket_by_id,
@@ -11,7 +11,7 @@ from crud import (
     delete_bid
 )
 from app.db.session import get_db, get_current_user
-from models import BiddingBasket
+from app.api.bidding_basket.schema import BiddingBasket, BiddingBasketUpdate
 from app.api.collection.models import Collection
 
 router = APIRouter()
@@ -33,9 +33,9 @@ async def create_bid_route(
 @router.put("/bids/{bid_id}", response_model=BiddingBasket)
 async def update_bid_route(
     bid_id: int,
+    bid_update: BiddingBasketUpdate,
     db: AsyncSession = Depends(get_db),
-    current_user: int = Depends(get_current_user),
-    **kwargs: Dict[str, Any]
+    current_user: int = Depends(get_current_user)
 ):
     """
     Update a bid by its ID.
@@ -49,7 +49,8 @@ async def update_bid_route(
         raise HTTPException(status_code=403,
                             detail="Not authorized to update this bid")
 
-    updated_bid = await update_bid(db=db, bid_id=bid_id, **kwargs)
+    updates = bid_update.model_dump(exclude_unset=True)
+    updated_bid = await update_bid(db=db, bid_id=bid_id, **updates)
     return updated_bid
 
 

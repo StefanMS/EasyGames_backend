@@ -3,21 +3,21 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 from datetime import datetime
 
-from crud import (
+from app.api.collection.crud import (
     get_collection_by_user_id,
     create_game,
     update_game_status,
     reset_game,
     update_game_expiry,
 )
-from schema import CollectionCreate
+from app.api.collection.schema import CollectionCreate, CollectionResponse
 from app.db.session import get_db
 
 router = APIRouter()
 
 
 @router.get("/collections/{user_id}",
-            response_model=Optional[CollectionCreate])
+            response_model=Optional[CollectionResponse])
 async def get_collection(user_id: int, db: AsyncSession = Depends(get_db)):
     collection = await get_collection_by_user_id(db, user_id)
     if not collection:
@@ -25,7 +25,7 @@ async def get_collection(user_id: int, db: AsyncSession = Depends(get_db)):
     return collection
 
 
-@router.post("/add-game", response_model=CollectionCreate)
+@router.post("/add-game", response_model=CollectionResponse)
 async def add_game(
     game_name: str = Form(...),
     active_game: bool = Form(False),
@@ -41,7 +41,7 @@ async def add_game(
 
 
 @router.post("/activate-game/{game_id}",
-             response_model=Optional[CollectionCreate])
+             response_model=Optional[CollectionResponse])
 async def activate_game(game_id: int, db: AsyncSession = Depends(get_db)):
     collection = await update_game_status(db, game_id)
     if not collection:
@@ -56,7 +56,7 @@ async def reset_game_route(game_id: int, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/update-expiry/{game_id}",
-             response_model=Optional[CollectionCreate])
+             response_model=Optional[CollectionResponse])
 async def update_game_expiry_route(
     game_id: int,
     new_expiry: datetime,

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(\"./.venv/Scripts/python.exe\" -c \"import app.main\")",
+      "PowerShell(Get-Command python, py -ErrorAction SilentlyContinue)",
+      "PowerShell(py -3.12 -c \"print\\('ok'\\)\")",
+      "Bash(python -)",
+      "Bash(git config *)"
+    ]
+  }
+}

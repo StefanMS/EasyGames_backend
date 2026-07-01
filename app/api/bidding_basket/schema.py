@@ -16,7 +16,7 @@ class BiddingBasketCreate(BaseModel):
 
 
 class BiddingBasketUpdate(BaseModel):
-    pass
+    game_id: Optional[int] = None
 
 
 class BiddingBasketResponse(BaseModel):

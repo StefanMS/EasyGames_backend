@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from models import BiddingBasket
+from app.api.bidding_basket.models import BiddingBasket
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 from app.api.collection.models import Collection
@@ -48,7 +48,7 @@ async def user_filtered_collection(
         bidding_basket_count = await db.execute(
             select(BiddingBasket).filter_by(game_id=game.game_id)
         )
-        game_capacity = bidding_basket_count.scalars().count()
+        game_capacity = len(bidding_basket_count.scalars().all())
 
         enrolled_user = await db.execute(
             select(BiddingBasket).filter_by(game_id=game.game_id,
@@ -76,7 +76,7 @@ async def user_filtered_collection(
 
 
 async def update_bid(db: AsyncSession, bid_id: int, **kwargs) -> BiddingBasket:
-    result = await db.execute(select(BiddingBasket).filter_by(
+    result = await db.execute(select(BiddingBasket).filter(
         BiddingBasket.id == bid_id))
     bid = result.scalars().first()
 
@@ -93,7 +93,7 @@ async def update_bid(db: AsyncSession, bid_id: int, **kwargs) -> BiddingBasket:
 
 
 async def delete_bid(db: AsyncSession, bid_id: int) -> bool:
-    result = await db.execute(select(BiddingBasket).filter_by(
+    result = await db.execute(select(BiddingBasket).filter(
         BiddingBasket.id == bid_id))
     bid = result.scalars().first()
 
