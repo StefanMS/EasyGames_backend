@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional, Dict
+from typing import Optional
 from datetime import datetime
 
 
@@ -31,16 +31,3 @@ class BiddingBasketResponse(BaseModel):
 
 class BiddingBasket(BiddingBasketResponse):
     pass
-
-
-class BiddingBasketUserFiltered(BaseModel):
-    id: int
-    game_name: str
-    game_status: str
-    enrolled_user: bool
-    capacity: int
-    countdown: Dict[str, str]
-    image_url: str
-
-    class Config:
-        orm_mode = True

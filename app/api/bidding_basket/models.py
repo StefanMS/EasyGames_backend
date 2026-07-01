@@ -1,8 +1,8 @@
 '''
-Models for bidding basket
+Models for collections
 '''
 
-from sqlalchemy import Column, DateTime, ForeignKey, BigInteger
+from sqlalchemy import Column, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.db.base import Base
@@ -10,13 +10,13 @@ from app.db.base import Base
 
 class BiddingBasket(Base):
     '''
-    Class for bidding basket
+    class for collections
     '''
     __tablename__ = "bidding_baskets"
 
-    id = Column(BigInteger, primary_key=True, index=True)
-    game_id = Column(BigInteger, ForeignKey("collections.game_id"))
-    player_id = Column(BigInteger, ForeignKey("users.id"))
+    id = Column(Integer, primary_key=True, index=True)
+    game_id = Column(ForeignKey("collections.game_id"))
+    player_id = Column(ForeignKey("users.id"))
     # pylint: disable=not-callable
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 

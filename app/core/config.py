@@ -1,32 +1,19 @@
 '''
 Config module
 '''
-# pylint: disable=no-name-in-module
-# pylint: disable=no-self-argument
-from pydantic_settings import BaseSettings
-from dotenv import load_dotenv
-import os
-
-load_dotenv(override=True)
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     '''
     Class for db settings
     '''
-    DATABASE_URL: str = os.getenv('DATABASE_URL')
-    SECRET_KEY: str = os.getenv('SECRET_KEY')
-    ALGORITHM: str = os.getenv('ALGORITHM')
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES'))
-    ADMIN_USER_EMAIL: str = os.getenv('ADMIN_USER_EMAIL')
-    ADMIN_USER_PASSWORD: str = os.getenv('ADMIN_USER_PASSWORD')
-    ADMIN_USER_FIRST_NAME: str = os.getenv('ADMIN_USER_FIRST_NAME')
-    ADMIN_USER_LAST_NAME: str = os.getenv('ADMIN_USER_LAST_NAME')
+    DATABASE_URL: str = "sqlite+aiosqlite:///./easygames_db.db"
+    SECRET_KEY: str = "dev-secret-key"
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
-    BUCKET_URL: str = os.getenv('BUCKET_URL')
-    API_URL: str = os.getenv('API_URL')
-    class Config:
-        env_file = ".env"
+    model_config = SettingsConfigDict(env_file=".env")
 
 
 settings = Settings()
